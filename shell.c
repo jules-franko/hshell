@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,10 +31,6 @@ int execute_cmd(char* cmd, char** args);
 int exit_program(char* cmd, char** args);
 
 int main() {
-
-    // printf("|*****************|\n");
-    // printf(" Heathershell 0.1\n");
-    // printf("|*****************|\n\n");
 
     char* cmd = malloc(sizeof(char)*32);
     char** args = malloc(sizeof(char*)*ARG_LIMIT);
