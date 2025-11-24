@@ -5,14 +5,19 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#define PROMPT "sh$ "
+#define PROMPT "hsh$ "
 #define ARG_LIMIT 10
 
 int read_input(char** cmd, char** args);
 int execute_builtin(char* cmd, char** args);
 int execute_cmd(char* cmd, char** args);
+int exit_program(char* cmd, char** args);
 
 int main() {
+
+    printf("|*****************|\n");
+    printf(" Heathershell 0.1\n");
+    printf("|*****************|\n\n");
 
     char* cmd = malloc(sizeof(char)*32);
     char** args = malloc(sizeof(char*)*ARG_LIMIT);
@@ -22,7 +27,7 @@ int main() {
     {
         printf(PROMPT);
         if (read_input(&cmd, args) == -1) { return -1; };
-        if (!(execute_builtin(cmd))) {
+        if (!(execute_builtin(cmd, args))) {
             execute_cmd(cmd, args);
         }
     }
@@ -95,7 +100,7 @@ int execute_cmd(char* cmd, char** args) {
 int execute_builtin(char* cmd, char** args) {
 
     if ((strcmp("quit", cmd)) == 0) {
-        printf("QUIT BUILTIN\n");
+        exit_program(cmd, args);
         return 1;
     }
 
@@ -103,6 +108,16 @@ int execute_builtin(char* cmd, char** args) {
 
 }
 
-int exit_program() {
+/*Properly exit the program*/
+int exit_program(char* cmd, char** args) {
 
+    for (int i = 0; i < ARG_LIMIT; i++) {
+        if (args[i] != NULL) {
+            free(args[i]);
+        }
+    }
+
+    free(cmd);
+    free(args);
+    exit(0);
 }
