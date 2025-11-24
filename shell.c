@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
 #define PROMPT "hsh$ "
 #define ARG_LIMIT 10
 
@@ -30,12 +31,20 @@ int exit_program(char* cmd, char** args);
 
 int main() {
 
-    printf("|*****************|\n");
-    printf(" Heathershell 0.1\n");
-    printf("|*****************|\n\n");
+    // printf("|*****************|\n");
+    // printf(" Heathershell 0.1\n");
+    // printf("|*****************|\n\n");
 
     char* cmd = malloc(sizeof(char)*32);
     char** args = malloc(sizeof(char*)*ARG_LIMIT);
+
+    void sigint_handler(int sig) {
+        printf("\n");
+        exit_program(cmd, args);
+        return;
+    }
+
+    signal(SIGINT, sigint_handler);
 
     /*Main Loop*/
     while(1)
@@ -99,7 +108,6 @@ int execute_cmd(char* cmd, char** args) {
 
     pid = fork();
     if (pid == 0) {
-        //cmd[strlen(cmd)-1] = '\0';
 
         if (execvp(cmd, args) == -1) {
             printf("Failed to open program\n");
