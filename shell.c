@@ -22,8 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
-#define PROMPT "hsh$ "
 #define ARG_LIMIT 10
+
+#define ANSI_COLOR_RED     "\e[1;31m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+#define PROMPT "hsh$ "
 
 int read_input(char** cmd, char** args);
 int execute_builtin(char* cmd, char** args);
@@ -46,7 +49,7 @@ int main() {
     /*Main Loop*/
     while(1)
     {
-        printf(PROMPT);
+        printf(ANSI_COLOR_RED PROMPT ANSI_COLOR_RESET);
         if (read_input(&cmd, args) == -1) { return -1; };
         if (!(execute_builtin(cmd, args))) {
             execute_cmd(cmd, args);
@@ -119,7 +122,7 @@ int execute_cmd(char* cmd, char** args) {
 
 int execute_builtin(char* cmd, char** args) {
 
-    if ((strcmp("quit", cmd)) == 0) {
+    if ((strcmp("exit", cmd)) == 0) {
         exit_program(cmd, args);
         return 1;
     }
